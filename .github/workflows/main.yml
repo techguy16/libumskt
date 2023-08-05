@@ -65,5 +65,5 @@ jobs:
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
       with:
-        name: libumskt-windows-${{ matrix.arch }-dll
+        name: libumskt-windows-${{ matrix.arch }}-dll
         path: build/actions_upload/libumskt.dll
