@@ -3,6 +3,8 @@ name: C/C++ CI (Linux)
 on:
   schedule:
     - cron: "0 0 * * 0" # Run every Sunday at midnight
+  push:
+    - branches: ["main"]
 
 jobs:
   build:
