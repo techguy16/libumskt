@@ -48,14 +48,22 @@ jobs:
       run: |
         cd UMSKT/build
         gcc -shared -o libumskt.so lib_umskt.a
+        gcc -shared -o libumskt.dll lib_umskt.a
 
     - name: Move files to correct directory
       run: |
         mkdir -p build/actions_upload
         mv UMSKT/build/libumskt.so build/actions_upload/
+        mv UMSKT/build/libumskt.dll build/actions_upload/
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
       with:
-        name: UMSKT-linux-${{ matrix.arch }}-shared-lib
+        name: libumskt-linux-${{ matrix.arch }}-shared-lib
         path: build/actions_upload/libumskt.so
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: libumskt-windows-${{ matrix.arch }-dll
+        path: build/actions_upload/libumskt.dll
