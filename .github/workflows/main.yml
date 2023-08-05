@@ -1,0 +1,59 @@
+name: C/C++ CI (Linux)
+
+on:
+  schedule:
+    - cron: "0 0 * * 0" # Run every Sunday at midnight
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - arch: x86_64
+    steps:
+    - name: Checkout Source Tree
+      uses: actions/checkout@v3
+
+    - name: Clone UMSKT repository
+      run: git clone https://github.com/UMSKT/UMSKT
+
+    - name: Change directory to UMSKT
+      run: cd UMSKT
+
+    - name: Setup latest Alpine Linux for ${{ matrix.arch }}
+      uses: jirutka/setup-alpine@v1
+      with:
+        packages: >
+          bash
+          build-base
+          cmake
+          git
+          musl-dev
+          openssl-dev
+          openssl-libs-static
+        arch: ${{ matrix.arch }}
+        shell-name: alpine-target.sh
+
+    - name: Configure and build UMSKT
+      run: |
+        cd UMSKT
+        cd build
+        cmake ..
+        make
+
+    - name: Convert library to shared object
+      run: |
+        cd UMSKT/build
+        gcc -shared -o libumskt.so lib_umskt.a
+
+    - name: Move files to correct directory
+      run: |
+        mkdir -p build/actions_upload
+        mv UMSKT/build/libumskt.so build/actions_upload/
+
+    - name: Upload build artifact
+      uses: actions/upload-artifact@v3.1.2
+      with:
+        name: UMSKT-linux-${{ matrix.arch }}-shared-lib
+        path: build/actions_upload/libumskt.so
