@@ -1,4 +1,4 @@
-name: libumskt.so
+name: libumskt Build
 
 on:
   schedule:
@@ -34,6 +34,7 @@ jobs:
           musl-dev
           openssl-dev
           openssl-libs-static
+          mingw-w64-gcc
         arch: ${{ matrix.arch }}
         shell-name: alpine-target.sh
 
@@ -48,7 +49,7 @@ jobs:
       run: |
         cd UMSKT/build
         gcc -shared -o libumskt.so lib_umskt.a
-        gcc -shared -o libumskt.dll lib_umskt.a
+        i686-w64-mingw32-g++ -shared -o libumskt.dll libumskt.so
 
     - name: Move files to correct directory
       run: |
@@ -59,11 +60,11 @@ jobs:
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
       with:
-        name: libumskt-linux-${{ matrix.arch }}-shared-lib
+        name: libumskt-so
         path: build/actions_upload/libumskt.so
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
       with:
-        name: libumskt-windows-${{ matrix.arch }}-dll
+        name: libumskt-dll
         path: build/actions_upload/libumskt.dll
