@@ -31,21 +31,21 @@ jobs:
 
     - name: Configure and build UMSKT
       run: |
-        cd build
+        cd UMSKT/build
         cmake ..
         make
 
     - name: Convert library to shared object
       run: |
-        cd build
+        cd UMSKT/build
         gcc -shared -o libumskt.so lib_umskt.a
         i686-w64-mingw32-g++ -shared -o libumskt.dll libumskt.so
 
     - name: Move files to correct directory
       run: |
         mkdir -p build/actions_upload
-        mv libumskt.so build/actions_upload/
-        mv libumskt.dll build/actions_upload/
+        mv UMSKT/build/libumskt.so build/actions_upload/
+        mv UMSKT/build/libumskt.dll build/actions_upload/
 
     - name: Upload build artifact
       uses: actions/upload-artifact@v3.1.2
