@@ -33,7 +33,7 @@ jobs:
       run: |
         cd UMSKT/build
         cmake ..
-        make
+        make _umskt
 
     - name: Convert library to shared object
       run: |
